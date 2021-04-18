@@ -9,7 +9,7 @@ yoink.rip is a flask application I made early October of 2020 that focuses on be
 
 First clone the repository by running the following command:
 ```
-git clone https://github.com/RustyBalboadev/yoink-public
+git clone https://github.com/RustyBalboadev/yoink-public.git
 ```
 Now you will need to install the modules required to run the app
 ```
