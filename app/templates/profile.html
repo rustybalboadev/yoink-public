@@ -1,0 +1,29 @@
+{% include "header.html" %}
+    <link rel='stylesheet' href="{{ url_for('static', filename='css/userProfile.css') }}">
+    <body style='background-color: #212529;'>
+        <div class="card" style="width: 18rem; margin: 0 auto; float: none; margin-bottom: 10px; background-color: #404040; color:white">
+            <div class="card-body" style='text-align: center;'>
+                <img class="img-circle" src="{{ config['BASE_URL'] }}/user/{{ user.username }}/photo" style="width: 100px; border-radius: 50px;">
+                <h5 class="card-title">Username: {{ user.username }}</h5>
+                <p class="card-text" style='white-space: pre-line;'>{{ user.bio }}</p>
+                <div class='btn-group-wrap'>
+                    <div class='btn-group' role='group' style="margin: 0 auto; width: inherit; display: inline-block;">
+                        {% for key, value in json.loads(social.to_json()).items() %}
+                            {% if value.connected %}
+                                {% if key == "github" %}
+                                    <a draggable="false" type="button" href="{{ value.profile_url }}" target="_blank"><i class="fab fa-github w3-xxlarge" style="color:white"></i></a>
+                                {% elif key == "twitter" %}
+                                    <a draggable="false" type='button' href='{{ value.profile_url }}' target='_blank'><i class="fab fa-twitter w3-xxlarge" style='color:#00ACEE'></i></a>
+                                {% elif key == "spotify" %}
+                                    <a draggable="false" type="button" href="{{ value.profile_url }}" target="_blank"><i class="fab fa-spotify w3-xxlarge" style="color: #1DB954;"></i></a>
+                                {% elif key == "discord" %}
+                                <a type="button" id="discordConnection" data-toggle="tooltip" data-placement="bottom" title="{{ value.username }}#{{ value.discriminator }}"><i class="fab fa-discord w3-xxlarge" style="color:#7289DA"></i></a>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+{% include "footer.html" %}

@@ -1,0 +1,46 @@
+{% include "header.html" %}
+    <body style='background-color: #212121;'>    
+        <div class="w3-main" style="margin-top: 10px;">
+            <div class='container' style='display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 100vh;'>
+                {% if new_pass %}
+                    <div class="card" style="width: 25rem; background-color: #181818; color:white">
+                        <div class="card-body">
+                            <h5 class="card-title">Reset your password</h5>
+                            <form method="POST">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" name="pass_value" class="form-control" placeholder="New Password">
+                                </div>
+                                <button type="submit" class='btn' style='background-color: #404040; color: white'>Change Pass</button><br>
+                            </form>
+                            <p id="update" style='display: none; color: white;'></p>
+                        </div>
+                    </div>     
+                {% else %}
+                    <div class="card" style="width: 25rem; background-color: #181818; color:white">
+                        <div class="card-body">
+                            <h5 class="card-title">Reset your password</h5>
+                            <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-at"></i></span>
+                                    <input type="text" name="email" class="form-control" placeholder="Email" id="emailInput" aria-label="Username">
+                            </div>
+                            <button id="passResetButton" type="submit" class='btn' style='background-color: #404040; color: white'>Send password reset email</button><br>
+                            <p id="update" style='display: none; color: white;'></p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+    <script>
+        var socket = io('{{ config["BASE_URL"] }}');
+        
+        $("#passResetButton").on("click", function(){
+            var email = $("#emailInput").val()
+            console.log("Here")
+            socket.emit("send_reset_link", {"email": email})
+            $("#update").text("Reset password link has been sent, please check your email.")
+            $("#update").show()
+        })
+    </script>
+{% include "footer.html" %}

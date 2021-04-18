@@ -1,0 +1,88 @@
+{% include "header.html" %}
+    <body style='background-color: #212121;'>    
+        <div class="w3-main" style="margin-top: 10px;">
+            <div class="w3-theme-l5">
+                <div class="w3-container">
+                    <ul class="w3-ul w3-card-4" style='background-color: #181818;'>
+                        <li class="w3-padding-16">
+                            <form method="GET" action="/search">
+                                <div class='input-group'>
+                                    <div class="input-group">
+                                        <input type="text" name='q' class="form-control" placeholder="Username" aria-describedby="searchBar">
+                                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                                    </div>
+                                </div><br>
+                            </form>
+                            <div class="row justify-content-center">
+                                {% if users|length == 0 %}
+                                    <h1 style="color: white"> No Results</h1>
+                                {% endif %}
+                                {% for user in users %}
+                                    <div class="col d-flex p-4">
+                                        <div class="card" style="width: 18rem; background-color: #404040; color: white">
+                                            <div class="profile-header-img" style="text-align: center;">
+                                                <img src="{{ config['BASE_URL'] }}/user/{{ user.username }}/photo"  style="width: 100px; border-radius: 50px; margin-top: 10px;">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ user.username }}</h5>
+                                                <p class="card-text" style="white-space: pre-line;">{{ user.bio }}</p>
+                                            </div>
+                                            <div class="card-footer">
+                                                <a href="/user/{{ user.username }}" class="btn btn-primary" style="float: left">Visit Profile</a>
+                                                {% if requestUser.is_admin %}
+                                                    <a href="/admin/{{ user.id }}" class="btn btn-primary" style="float: right;">Admin Page</a>
+                                                {% endif %}
+                                            </div>
+                                        </div><br>
+                                    </div>
+                                {% endfor %}
+                                <center>
+                                    <div class='icon-layout'>
+                                        <a class="btn btn-primary" type='submit' onclick="prev()"><i class="fas fa-chevron-left w3-xlarge"></i> Previous Page</a>
+                                        <a class="btn btn-primary" type='submit' onclick="next()">Next Page <i class="fas fa-chevron-right w3-xlarge"></i></a>
+                                    </div>
+                                </center>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        function getPageNum(){
+            var url = window.location.search;
+            const urlParams = new URLSearchParams(url)
+
+            if (urlParams.get("page") == null) {
+                var pageNum = 1
+            } else {
+                var pageNum = urlParams.get("page")
+            }
+
+            return parseInt(pageNum)
+        }
+
+        function next() {
+            var url = window.location.search;
+            const urlParams = new URLSearchParams(url)
+            var pageNum = getPageNum() + 1
+            if (urlParams.get("q") == null){
+                window.location = "{{ config['BASE_URL'] }}" + "/search?page=" + pageNum.toString()
+            } else {
+                window.location = "{{ config['BASE_URL'] }}" + "/search?q=" + urlParams.get("q") + "&page=" + pageNum.toString() 
+            }
+        }
+
+        function prev(){
+            var url = window.location.search;
+            const urlParams = new URLSearchParams(url)
+            var pageNum = getPageNum() - 1
+            if (urlParams.get("q") == null){
+                window.location = "{{ config['BASE_URL'] }}" + "/search?page=" + pageNum.toString()
+            } else {
+                window.location = "{{ config['BASE_URL'] }}" + "/search?q=" + urlParams.get("q") + "&page=" + pageNum.toString() 
+            }
+        }
+    </script>
+{% include "footer.html" %}

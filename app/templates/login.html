@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <title>Yoink | Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#5cd1c5">
+        <meta property="og:title" content="Yoink | IP Grabber"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="https://yoink.rip"/>
+        <meta property='og:description' content='Grab IP Address along with information related to the IP'>
+        <meta name='twitter:title' content='Yoink | IP Grabber'/>
+        <meta name='twitter:description' content='Grab IP Address along with information related to the IP'>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/6929a992d0.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SLWHHG4SC6"></script>
+        <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-SLWHHG4SC6');
+        </script>
+    </head>
+    
+    <nav class="navbar navbar-dark" style="background-color: #121212;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Yoink</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/login">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+	<body style='background-color: #212121;'>    
+		<div class="w3-main">
+            <div class="w3-row-padding w3-margin-bottom">
+                <div class='container' style='display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: 10px;'>
+                    <div class="card" style="width: 25rem; background-color: #181818; color:white">
+                        <div class="card-body">
+                            <form method="POST">
+                                <h3 class="card-title">Login</h3>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-user-circle"></i></span>
+                                    <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-lock"></i></span>
+                                    <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+                                </div>
+
+                                <button type="submit" class='btn' style='background-color: #404040; color: white'>Login</button><br>
+                                <a href="/password_reset" style="text-decoration: underline;">Forgot Password?</a><br>
+                                {{ recaptcha }}
+                                <p id="error" style='display: none; color: red;'></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <style>
+        .g-recaptcha {
+            display: inline-block;
+        }
+    </style>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (urlParams.get("error") != null) {
+            var errorText = document.getElementById("error")
+            errorText.textContent = urlParams.get("error")
+            errorText.style.display = null
+        }
+    </script>
+{% include "footer.html" %}

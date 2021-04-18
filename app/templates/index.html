@@ -1,0 +1,91 @@
+{% include "header.html" %}
+	<body style='background-color: #212121;'>    
+		<div class="w3-main" style="margin-top: 10px;">
+			<div class="w3-row-padding w3-margin-bottom">
+				<div class="w3-quarter">
+					<div class="w3-container w3-padding-16" style='background-color: #121212; color:white'>
+					<div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
+					<div class="w3-right">
+						<h3>{{ stats.total_ips }}</h3>
+					</div>
+					<div class="w3-clear"></div>
+					<h4>Grabbed</h4>
+					</div>
+				</div>
+				<div class="w3-quarter">
+					<div class="w3-container w3-padding-16" style='background-color: #121212; color:white'>
+					<div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
+					<div class="w3-right">
+						<h3>{{ stats.total_views }}</h3>
+					</div>
+					<div class="w3-clear"></div>
+					<h4>Views</h4>
+					</div>
+				</div>
+				<div class="w3-quarter">
+					<div class="w3-container w3-padding-16" style='background-color: #121212; color:white'>
+					<div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge" ></i></div>
+					<div class="w3-right">
+						<h3>{{ stats.total_links }}</h3>
+					</div>
+					<div class="w3-clear"></div>
+					<h4>Tracking Codes</h4>
+					</div>
+				</div>
+				<div class="w3-quarter">
+					<div class="w3-container w3-text-white w3-padding-16" style='background-color: #121212; color:white'>
+					<div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
+					<div class="w3-right">
+						<h3>{{ stats.total_users }}</h3>
+					</div>
+					<div class="w3-clear"></div>
+					<h4>Users</h4>
+					</div>
+				</div>
+			</div>
+			<div class="w3-theme-l5">
+				<div class="w3-container">
+					<ul class="w3-ul w3-card-4" style='background-color: #181818;'>
+						<li class="w3-padding-16">
+							<h4 style='color:white'>Create your IP Logger</h4>
+							<form method="POST">
+								<input type='text' class='form-control' name='inputURL' placeholder="Enter a URL"><br>
+								<button type='submit' name='action' value='create' class='button' style='background-color: #404040; width: 100%;'>Create URL</button><br>
+							</form>
+							<p id="error" style='display: none; color: red;'></p>
+							<div class='btn-group-wrap'>
+								<div class='btn-group' role='group' style='color:white'>
+									<a draggable="false" type='button' href='https://twitter.com/rustybalboadev' traget='_blank'><i class="fab fa-twitter w3-xxlarge" style='color:#00ACEE'></i></a>
+									&nbsp;&nbsp;&nbsp;
+									<a draggable="false" type='button' href='https://discord.gg/y2hdngyRxp' traget='_blank'><i class="fab fa-discord w3-xxlarge" style='color:#7289DA'></i></a>
+									&nbsp;&nbsp;&nbsp;
+									<a draggable="false" type='button' href='https://github.com/rustybalboadev' target="_blank"><i class="fab fa-github w3-xxlarge" style='color: white'></i></a>
+									&nbsp;&nbsp;&nbsp;
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header">
+				<img src="..." class="rounded me-2" alt="...">
+				<strong class="me-auto">Bootstrap</strong>
+				<small class="text-muted">11 mins ago</small>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+			<div class="toast-body">Hello, world! This is a toast message.</div>
+		</div>
+	</body>
+	<script>
+		$(".toast").show()
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		if (urlParams.get("error") != null) {
+			var errorText = document.getElementById("error")
+			errorText.textContent = urlParams.get("error")
+			errorText.style.display = null
+		}
+	</script>
+{% include "footer.html" %}

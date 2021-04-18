@@ -1,0 +1,31 @@
+yoink:
+  mongo-uri: ""
+  secret-key: ""
+  base-url: "http://127.0.0.1:5000"
+  encryption-key: ""
+
+  email:
+    address: ""
+    app-password: ""
+  
+  recaptcha:
+    key: ""
+    secret: ""
+  
+  spotify:
+    client_id: ""
+    secret: ""
+  
+  discord:
+    client_id: ""
+    secret: ""
+  
+  twitter:
+    key: ""
+    secret: ""
+  
+  github:
+    client_id: ""
+    secret: ""
+  
+    

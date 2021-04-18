@@ -1,0 +1,157 @@
+{% include "header.html" %}
+    <body style='background-color: #212121;'>    
+        <div class="w3-main" style="margin-top: 10px;">
+            <div class="w3-theme-l5">
+                <div class="w3-container">
+                    <ul class="w3-ul w3-card-4" style="background-color: #181818;">
+                        <li class="w3-padding-16">
+                            <div class="container" style="margin-top: 50px">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-3">
+                                        <div class="card" style="background-color: #404040; color: white">
+                                            <div class="card-body">
+                                                <center>
+                                                    <img class="img-circle" src="{{ config['BASE_URL'] }}/user/{{ user.username }}/photo" style="width: 100px; border-radius: 50px;">
+                                                    <h5 class="card-title">{{ user.username }}</h5>
+                                                    <p class="card-text" style="white-space: pre-line;">{{ user.bio }}</p>
+                                                    <div class='btn-group-wrap'>
+                                                        <div class='btn-group' role='group' style="margin: 0 auto; width: inherit; display: inline-block;">
+                                                            {% for key, value in json.loads(social.to_json()).items() %}
+                                                                {% if value.connected %}
+                                                                    {% if key == "github" %}
+                                                                        <a draggable="false" type="button" href="{{ value.profile_url }}" target="_blank"><i class="fab fa-github w3-xxlarge" style="color:white"></i></a>
+                                                                    {% elif key == "twitter" %}
+                                                                        <a draggable="false" type='button' href='{{ value.profile_url }}' target='_blank'><i class="fab fa-twitter w3-xxlarge" style='color:#00ACEE'></i></a>
+                                                                    {% elif key == "spotify" %}
+                                                                        <a draggable="false" type="button" href="{{ value.profile_url }}" target="_blank"><i class="fab fa-spotify w3-xxlarge" style="color: #1DB954;"></i></a>
+                                                                    {% elif key == "discord" %}
+                                                                        <a type="button" id="discordConnection" data-toggle="tooltip" data-placement="bottom" title="{{ value.username }}#{{ value.discriminator }}"><i class="fab fa-discord w3-xxlarge" style="color:#7289DA"></i></a>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <ul class="list-group">
+                                    <li class="list-group-item active" id="profileList">Profile</li>
+                                    <li class="list-group-item" id="securityList">Security</li>
+                                    <li class="list-group-item" id="connectionList">Connections</li>
+                                </ul>
+                                <div class="card" id="profileCard" style="background-color: #404040; color: white; margin-top: 10px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Profile Settings</h5>
+                                        <h5>Change Username</h5>
+                                        <input type="text" class="form-control" placeholder="{{ user.username }}" id="usernameField">
+                                        <h5>Change Bio</h5>
+                                        <textarea class="form-control" maxlength="100" placeholder="{{ user.bio }}" style="white-space: pre-wrap;" id="bioField"></textarea>
+                                        <h5>Upload Avatar</h5>
+                                        <form method="POST" enctype="multipart/form-data">
+                                            <div class="input-group">
+                                                <input class="form-control" type="file" name="file">
+                                                <button class="btn btn-primary" type="submit">Upload</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button class="btn btn-primary" id="accountSave" style="float: left;">Save Changes</button>
+                                        <button class='btn btn-danger' id="accountDelete" style="float: right;">Delete Account</button>
+                                    </div>
+                                </div>
+
+                                <div class="card" id="securityCard" style="background-color: #404040; color: white; display: none; margin-top: 10px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Security Settings</h5>
+                                        <a class="btn btn-primary" href="/password_reset">Password Reset</a>
+                                    </div>
+                                </div>
+
+                                <div class="card" id="connectionCard" style="background-color: #404040; color:white; display: none; margin-top: 10px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Connection Settings</h5>
+                                        {% for key, value in json.loads(social.to_json()).items() %}
+                                            {% if not value.connected %}
+                                                {% if key == "github" %}
+                                                    <a class="btn btn-primary" href="/githubauth"><i class="fab fa-github" style="color: #211F1F;"></i> Link Github</a>
+                                                {% elif key == "spotify" %}
+                                                    <a class="btn btn-primary" href="/spotifyauth"><i class="fab fa-spotify" style="color:#1ed760"></i> Link Spotify</a>
+                                                {% elif key == "twitter" %}
+                                                    <a class="btn btn-primary" href="/twitterauth"><i class="fab fa-twitter" style="color: #00ACEE;"></i> Link Twitter</a>
+                                                {% elif key == "discord" %}
+                                                    <a class="btn btn-primary" href="/discordauth"><i class="fab fa-discord" style="color: #7289da;"></i> Link Discord</a>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        var socket = io('{{ config["BASE_URL"] }}');
+
+        $("#profileList").on("click", function(){
+            $("#profileCard").show()
+            $("#profileList").addClass("active")
+            $("#connectionCard").hide()
+            $("#connectionList").removeClass("active")
+            $("#securityCard").hide()
+            $("#securityList").removeClass("active")
+        })
+
+        $("#connectionList").on("click", function(){
+            $("#connectionCard").show()
+            $("#connectionList").addClass("active")
+            $("#profileCard").hide()
+            $("#profileList").removeClass("active")
+            $("#securityCard").hide()
+            $("#securityList").removeClass("active")
+        })
+
+        $("#securityList").on("click", function(){
+            $("#securityCard").show()
+            $("#securityList").addClass("active")
+            $("#connectionCard").hide()
+            $("#connectionList").removeClass("active")
+            $("#profileCard").hide()
+            $("#profileList").removeClass("active")
+        })
+
+        $("#accountDelete").on("click", function(){
+            socket.emit("account_delete")
+        })
+
+        $("#accountSave").on("click", function(){
+            var username = $("#usernameField").val()
+            var bio = $("#bioField").val()
+            var bio = encodeURIComponent(bio)
+            window.location.href = "{{ config['BASE_URL'] }}/api/change_settings?username=" + username + "&bio=" + bio
+        })
+
+        socket.on("refresh", function(){
+            window.location.reload(true)
+        })
+
+        socket.on("redirect", function(data){
+            window.location.href = "{{ config['BASE_URL'] }}" + data["path"]
+        })
+    </script>
+    <style>
+        #profileList:hover {
+            cursor: pointer;
+        }
+        #connectionList:hover {
+            cursor: pointer;
+        }
+        #securityList:hover {
+            cursor: pointer;
+        }
+    </style>
+{% include "footer.html" %}

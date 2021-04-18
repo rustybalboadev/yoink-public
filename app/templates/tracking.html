@@ -1,0 +1,51 @@
+{% include "header.html" %}
+    <body style='background-color: #212121;'>    
+        <div class="w3-main" style="margin-top: 10px;">
+            <div class="w3-theme-l5">
+                <div class="w3-container">
+                    <ul class="w3-ul w3-card-4" style='background-color: #181818;'>
+                        <li class="w3-padding-16">
+                            <table class="table table-dark" style="background-color: #1f1f1f;" id='ipData'>
+                                <thead>
+                                    <tr>
+                                        <th scope='col'>Tracking URL</th>
+                                        <th scope='col'>Total Grabs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for link in links %}
+                                        <tr>
+                                            <td><a href="{{ config['BASE_URL'] }}/track/{{ link.track_id }}" style="text-decoration: none;" target="_blank">https://yoink.rip/track/{{ link.track_id }}</a></td>
+                                            <td>{{ link.grab_info|length }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="input-group">
+                                <select id="selectField" class="form-select">
+                                    <option selected>Select ID</option>
+                                    {% for link in links %}
+                                        <option value="{{ link.track_id }}">{{ link.track_id }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-danger" onclick="deleteLink()">Delete</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        function deleteLink(){
+            var selectID = document.getElementById("selectField")
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "{{ config['BASE_URL'] }}/api/delete_link?id=" + selectID.value, true);
+            xhr.send()
+        }
+
+        socket.on("refresh", function(){
+            window.location.reload(true)
+        })
+    </script>
+{% include "footer.html" %}
