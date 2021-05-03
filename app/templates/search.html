@@ -21,14 +21,14 @@
                                     <div class="col d-flex p-4">
                                         <div class="card" style="width: 18rem; background-color: #404040; color: white">
                                             <div class="profile-header-img" style="text-align: center;">
-                                                <img src="{{ config['BASE_URL'] }}/user/{{ user.username }}/photo"  style="width: 100px; border-radius: 50px; margin-top: 10px;">
+                                                <img src="{{ config['BASE_URL'] }}/user/{{ user.id }}/photo"  style="width: 100px; border-radius: 50px; margin-top: 10px;">
                                             </div>
                                             <div class="card-body">
                                                 <h5 class="card-title">{{ user.username }}</h5>
                                                 <p class="card-text" style="white-space: pre-line;">{{ user.bio }}</p>
                                             </div>
                                             <div class="card-footer">
-                                                <a href="/user/{{ user.username }}" class="btn btn-primary" style="float: left">Visit Profile</a>
+                                                <a href="/user/{{ user.id }}" class="btn btn-primary" style="float: left">Visit Profile</a>
                                                 {% if requestUser.is_admin %}
                                                     <a href="/admin/{{ user.id }}" class="btn btn-primary" style="float: right;">Admin Page</a>
                                                 {% endif %}

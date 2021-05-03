@@ -1,9 +1,8 @@
 {% include "header.html" %}
-    <link rel='stylesheet' href="{{ url_for('static', filename='css/userProfile.css') }}">
     <body style='background-color: #212529;'>
         <div class="card" style="width: 18rem; margin: 0 auto; float: none; margin-bottom: 10px; background-color: #404040; color:white">
             <div class="card-body" style='text-align: center;'>
-                <img class="img-circle" src="{{ config['BASE_URL'] }}/user/{{ user.username }}/photo" style="width: 100px; border-radius: 50px;">
+                <img class="img-circle" src="{{ config['BASE_URL'] }}/user/{{ user.id }}/photo" style="width: 100px; border-radius: 50px;">
                 <h5 class="card-title">Username: {{ user.username }}</h5>
                 <p class="card-text" style='white-space: pre-line;'>{{ user.bio }}</p>
                 <div class='btn-group-wrap'>

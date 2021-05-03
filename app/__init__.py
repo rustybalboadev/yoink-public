@@ -220,16 +220,16 @@ def track(id):
         return render_template("track.html", track=link, json=json)
     return redirect(app.config["BASE_URL"] + "/")
 
-@app.route("/user/<user>/photo")
-def userPhoto(user):
-    user = User.objects(username=user).first()
+@app.route("/user/<userid>/photo")
+def userPhoto(userid):
+    user = User.objects(id=userid).first()
     req = make_response(send_file(user.avatar, mimetype="image"))
     req.headers.set("Cache-Control", "max-age=0")
     return req
 
-@app.route("/user/<user>")
-def userProfile(user):
-    user = User.objects(username=user).first()
+@app.route("/user/<userid>")
+def userProfile(userid):
+    user = User.objects(id=userid).first()
     social = user.socials
     return render_template("profile.html", user=user, social=social, json=json)
 
